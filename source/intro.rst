@@ -3,10 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-OpenAIE 视觉模块 使用说明文档
+Discovery套件 使用说明文档
 ####################################################
 
-    OpenAIE 视觉模块 
+    Discovery套件  
 
  
     

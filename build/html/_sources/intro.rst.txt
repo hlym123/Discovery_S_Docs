@@ -3,10 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-OpenAIE 视觉模块 使用说明文档
+Discovery套件 使用说明文档
 ####################################################
 
-    OpenAIE 视觉模块 
+    Discovery套件  
 
  
     
@@ -57,17 +57,7 @@ OpenAIE 视觉模块 使用说明文档
 .. figure:: 案例测试.png     
 
 
-<<<<<<< HEAD
-4. 固件升级
-++++++++++++
-下载固件升级工具，解压进入文件夹，找到并打开"kflash_gui.exe"。按下图所示操作，烧录固件。
-
-.. figure:: 固件烧录.png  
-   :width: 350px
-   :align: center
-=======
  
->>>>>>> a8025eb36810bd6f99a5ea2506072f38218bea4f
 
 ---------
 

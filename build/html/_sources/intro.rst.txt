@@ -6,43 +6,43 @@
 Discovery套件 使用说明文档
 ####################################################
 
-    Discovery套件  
-
+    Discovery套件是基于Arduino开发的编程套件，其由主控，连接线，以及按键组，电位器，蜂鸣器，RGB-LED，温湿度传感器，超声波测距传感器，电机风扇等模块组成。可以进行图形化编程或通过Arduino IDE进行代码编程。
  
-    
     
 简介
 ******************** 
-
+.. figure:: 主控板.png  
+   :width: 350px
+   :align: center
+   
 * 供电方式：USB TypeC（DC: 5V）
-* 处理器: STM32H741VIT6，ARM® 32-bit Cortex®-M7 CPU，480MHz(1027 DMIPS) 
-* 存储：1MB RAM，2 MB flash.
-* 图像传感器：30万像素彩色摄像头 
-* 应用：
-    + 1. 颜色追踪
-    + 2. 形状检测（圆形，矩形）
-    + 3. 二维码识别
-    + 4. AprilTag 标记追踪
-    + 5. 等 
- 
+* 微处理器: Atmega328P-AU，兼容Arduino UNO系统，主频:16MHz 
+* 存储：Flash:32KB，EEPROM:1KB
+* 按键：电源键：单击打开电源，双击关闭电源；复位键：单击复位系统
+* 电量指示：4个指示灯用于指示主控板系统电量，共5种显示状态，分别表示电量为：0%，25%，50%，75%，100%。
+* 输入/输出端口：9个输入/输出端口，接口物理类型为HY2.0-4P，其中端口4、5、6为数字/模拟信号端口，端口1、2、3、7、8、9为带PWM的数字信号端口，端口6为硬件I2C接口。
+.. Note:: 系统负载电流持续小于45mA，32秒后将自动关断电源。
+
 ---------
 
 入门使用
 ********************
 
 点击下载
-\ `相关资料 <https://pan.baidu.com/s/1aj5JFqdzW-t58mJ5YncZFw>`_ 
-提取码：3qo0 。
-
+\ `相关资料 <https://pan.baidu.com/s/1Poc3n607VHI5KOrWGQ2K3Q>`_ 
+提取码：5nqa 。
+ 
 1. 驱动安装
 ++++++++++++
-模块通过 USB 连接电脑通信，通常情况下模块连接电脑会自动安装驱动，安装驱动后，将鼠标移动到我的电脑，右键属性-->设备管理器-->端口(COM和LPT)，可查看到设备连接信息，如下图所示：
+主控板通过 USB 连接电脑通信，因此需要安装驱动 USB 转 UART 串口驱动。
+
+进入资料下载链接，选择下载驱动。双击打开“CH341SER.EXE”文件，点击“安装”。若提示安装失败，则先点击“卸载”，再点击“安装”按钮。
+
+安装驱动后，将鼠标移动到我的电脑，右键属性-->设备管理器-->端口(COM和LPT)，可查看到设备连接信息，如下图所示：
 
 .. figure:: 连接设备.png    
 
-若电脑没有自动安装驱动，则需要自己进行手动安装，请遵循以下步骤进行安装
-
-
+ 
 2. 软件使用
 ++++++++++++
  
@@ -52,258 +52,136 @@ Discovery套件 使用说明文档
    
 3. 案例测试
 ++++++++++++
-如下图所示，输入或复制示例程序到程序编辑框内，点击“运行”，观察。
+模块测试案例在软件安装包的下图所示路径中
 
-.. figure:: 案例测试.png     
+.. figure:: 案例路径.png   
 
+如下图所示，点击“打开”按钮，选择任一案例打开；点击“COMxx”下拉选择端口（不选择COM1）；点击“上传”按钮；观察下边信息输出，等待程序上传完成。
 
- 
+.. figure:: 案例测试.png      
+
+.. Note:: 图片较小，无法看清时，可以把鼠标停留在图片所处位置右键选择“在新标签页中打开图片”。
+
+4. 串口监视器使用 
+++++++++++++
+串口监视器
 
 ---------
 
-板载功能使用教程 
+套件模块使用教程 
 ********************
 
-1. 板载LED
+1. RGB-LED
 ++++++++++++
 
-板载一颗RGB LED 
-API
-::
-	led.red.on()
-	led.red.off()
-	led.red.toggle()
-	led.green.on()
-	led.green.off()
-	led.green.toggle()
-	led.blue.on()
-	led.blue.off()
-	led.blue.toggle()
+物理接口：PH2.0-4P母座；通信接口类型：单总线。
 
-示例1：点亮LED
-::
-	import time
-	from openaie import led
-	while True:
-		led.green.toggle()
-		time.sleep(500)
+概述：RGB灯带含三个RGB（Red-红，Green-绿，Blue-蓝）可调光LED，其内部带控制芯片，每个灯可独立控制。每个灯可发出红绿蓝三种颜色（即光学三原色），256种不同亮度的光。
 
-2. 板载按键
+.. figure:: discovry_rgb_led.png  
+   :width: 230px
+   :align: center
+   
+.. Note:: 每种颜色的LED共有2^8=256(0~255)个发光等级，即共有2^8^3=16 777 216种颜色组合。通过查找 \ `RGB颜色对照表 <https://tool.oschina.net/commons?type=3>`_ 生成自己喜欢的颜色。
+
+示例：点亮灯
+
+.. figure:: 点亮灯.png  
+   :width: 500px
+   :align: center
+   
+2. 按键组
 ++++++++++++
-按下接低电平，弹起接高电平。
-API:
-	button.is_pressed()
-	获取按键当前状态，返回的结果是 True：按键被按下；或者是 False: 按键未被按下。
-    
-示例1：按键控制开关灯
-::
-	from openaie import *	 
-	led.green.on() 
-	while(True):
-		if button.is_pressed():
-			time.sleep(5)
-			if button.is_pressed():
-				print("press")
-				led.green.toggle()
-			while (button.is_pressed()) :
-				pass
+物理接口：PH2.0-4P母座。输出TTL电平信号。
+
+概述：按键组含按键“1”和按键“2”，与模块上字符标注对应。按键输出信号带上拉电阻，按键按下时接地输出低电平信号，弹起时输出高电平信号。
  
+.. figure:: discovery_key_group.png  
+   :width: 230px
+   :align: center
     
-3. 语音识别
+示例：按键控制开关灯
+
+.. figure:: 按键控制开关灯.png  
+   :width: 500px
+   :align: center
+   
+3. 电位器
 ++++++++++++++++++++++
+物理接口：PH2.0-4P母座；输出模拟信号。
 
-非特定人语音识别
+概述：电位器即可变点阻器，由固定阻值的电阻体与滑动系统组成，通过一个可滑动触点（作为信号输出端）在电阻上滑动，通过拧转旋钮可以调节信号输出端与电阻两端的电阻值。
+下图电位器模块逆时针旋转时，接地端与信号输出端之间的电压变小，通过模数转换获得的输出数值将变小；顺时针旋转时，接地端与信号输出端之间的电压变大，通过模数转换获得的输出数值将变大。
 
-添加识别关键词
-::
-    #str：设别语句的拼音
-    #ret: 识别到关键词时的返回值
-    asr.add_cmd(str, ret)
-    
-开始运行
-::    
-    asr.run()    
-    
-读取识别结果 
-::            
-    asr.read()    
+.. figure:: discovery_potentiometer.png  
+   :width: 230px
+   :align: center
+   
+示例：电位器控制灯亮度
 
-.. Note:: 安静的环境中可获得较大的识别准确率
+.. figure:: 电位器控制灯亮度.png  
+   :width: 800px
+   :align: center
+  
+4. 蜂鸣器
+++++++++++++++++++++++
+物理接口：PH2.0-4P母座；
 
-示例1：
-::
-	from openaie import *
-	import time
-	 
-	asr.add_cmd("hong", 1) 		# 添加关键词“红”，编号为“1”。
-	asr.add_cmd("lv", 2)		# 添加关键词“绿”，编号为“2”。
-	asr.add_cmd("lan", 3)		# 添加关键词“蓝”，编号为“3”。
-	asr.add_cmd("kai deng", 4)	# 添加关键词“开灯”，编号为“4”。
-	asr.add_cmd("guan deng", 5)	# 添加关键词“关灯”，编号为“5”。
-	asr.run()					# 开始识别
+概述：无源蜂鸣器，通过电控振荡发声。 
 
-	def asr_test(sel):
-		if sel == 1 :
-			led.red.on()
-			led.green.off()
-			led.blue.off()
-		elif sel == 2 :
-			led.red.off()
-			led.green.on()
-			led.blue.off()
-		elif sel == 3 :
-			led.red.off()
-			led.green.off()
-			led.blue.on()
-		elif sel == 4 :
-			led.red.on()
-			led.green.on()
-			led.blue.on()
-		elif sel == 5 :
-			led.red.off()
-			led.green.off()
-			led.blue.off()
+.. figure:: discovery_buzzer.png  
+   :width: 230px
+   :align: center
+.. Note:: 频率一般设为100~1500之间，自行测试调节。
 
-	while True:
-		asr_test(asr.get_res())  
-		time.sleep(100)	      
-    
-<<<<<<< HEAD
-8. 液晶显示屏
+5. 温湿度传感器
 ++++++++++++++++++++++ 
-显示原理
-参数
-IPS全视角
-分辨率：240*320(QVGA)
+物理接口：PH2.0-4P母座；通信接口类型：I2C
 
+概述： 
+温度测量范围：-40~80℃，分辨率：0.1℃，精度：±0.5℃，响应时间：小于5S；
+湿度测量范围：0~99.9％RH（Relative Humidity，相对湿度），分辨率：0.1％RH，精度：±3％RH。
+		
+.. figure:: discovery_am2320.png  
+   :width: 230px
+   :align: center
 
-API
-::
-	# 初始化
-	lcd.init(type=1, freq=15000000, color=lcd.BLACK)
-	
-	# 设置背光亮度
-	lcd.set_backlight(state)
-	
-	# 显示字符 
-	lcd.draw_string(100, 100, "hello maixpy", lcd.RED, lcd.BLACK)
-	
-	# 显示图片
-	lcd.display(image, roi=Auto)
-	
-	# 清空显示
-	lcd.clear()
-	
-	# 设置显示方向
-	lcd.rotation
-	lcd.invert
-	
-	# 是否镜像显示
-	lcd.mirror(invert)
+示例：温湿度读取显示
 
-示例1：字符串，图片显示
-::
-	from openaie import *
+.. figure:: 温湿度读取显示.png  
+   :width: 800px
+   :align: center
+  
+6. 超声波测距传感器
+++++++++++++++++++++++ 
+物理接口：PH2.0-4P母座；通信接口类型：I2C
 
+概述：超声波测距传感器量程：0~400cm
 
-=======
->>>>>>> a8025eb36810bd6f99a5ea2506072f38218bea4f
+.. figure:: ultrasonic_sensor.png  
+   :width: 230px
+   :align: center
+   
+示例：超声波测距
 
-9. 摄像头
-++++++++++++++++++++++   
-原理
-传感器参数
-200万像素(OV2640)
-<<<<<<< HEAD
+.. figure:: 超声波测距.png  
+   :width: 800px
+   :align: center
+  
 
-API
-::
-	# 重置并初始化摄像头
-	sensor.reset([freq=24000000, set_regs=True, dual_buff=False])
+7. 电机风扇
+++++++++++++++++++++++ 
+物理接口：PH2.0-4P母座；通信接口类型：PWM
 
-	# 启动或关闭捕获图像功能
-	sensor.run(enable)
+.. figure:: motor_fan.png  
+   :width: 230px
+   :align: center
 
-	# 设置帧大小 VGA, QVGA
-	sensor.set_framesize(framesize[, set_regs=True])
+示例：电机风扇转速控制
 
-	# 设置帧格式 RGB565
-	sensor.set_pixformat(format[, set_regs=True])
-
-	# 拍照
-	sensor.snapshot()
-
-	# 关闭摄像头/切换摄像头
-	sensor.shutdown(enable/select)
-
-	# 跳帧
-	sensor.skip_frames([n,time])
-
-	# 对比度
-	sensor.set_contrast(contrast)
-
-	# 亮度 
-	sensor.set_brightness(brightness)
-
-	# 饱和度
-	sensor.set_saturation(saturation)
-
-	# 自动增益 
-	sensor.set_auto_gain(enable,gain_db)
-
-	# 垂直镜像
-	sensor.set_hmirror(enable)
-
-示例1：字符串，图片显示
-::
-	from openaie import *
- 
-=======
-
-API
-::
-	# 重置并初始化摄像头
-	sensor.reset([freq=24000000, set_regs=True, dual_buff=False])
-
-	# 启动或关闭捕获图像功能
-	sensor.run(enable)
-
-	# 设置帧大小 VGA, QVGA
-	sensor.set_framesize(framesize[, set_regs=True])
-
-	# 设置帧格式 RGB565
-	sensor.set_pixformat(format[, set_regs=True])
-
-	# 拍照
-	sensor.snapshot()
->>>>>>> a8025eb36810bd6f99a5ea2506072f38218bea4f
-
-	# 关闭摄像头/切换摄像头
-	sensor.shutdown(enable/select)
-
-	# 跳帧
-	sensor.skip_frames([n,time])
-
-	# 对比度
-	sensor.set_contrast(contrast)
-
-	# 亮度 
-	sensor.set_brightness(brightness)
-
-	# 饱和度
-	sensor.set_saturation(saturation)
-
-	# 自动增益 
-	sensor.set_auto_gain(enable,gain_db)
-
-	# 垂直镜像
-	sensor.set_hmirror(enable)
-
-示例1：字符串，图片显示
-::
-	from openaie import *
- 
-
+.. figure:: 电机风扇控制.png  
+   :width: 800px
+   :align: center
 
 
 --------- 

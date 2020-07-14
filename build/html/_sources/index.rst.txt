@@ -8,7 +8,7 @@ Welcome to OpenAIE_Docs's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: OpenAIE视觉模块使用
+   :caption: Discovery套件 使用说明文档
    
    intro.rst
  

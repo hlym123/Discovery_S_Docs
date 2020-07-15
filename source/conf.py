@@ -17,7 +17,7 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'OpenAIE_Docs'
+project = 'Discovery_S_Docs'
 copyright = '2020, loki'
 author = 'loki'
 
